@@ -8,12 +8,21 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../auth.service';
-// declare var google:any;
+import {
+  SocialAuthService,
+  GoogleLoginProvider,
+  GoogleSigninButtonModule,
+} from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    GoogleSigninButtonModule,
+  ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
@@ -21,13 +30,20 @@ export class SignupComponent {
   signupForm!: FormGroup;
   errorMessage: string = '';
 
-  constructor(private fb: FormBuilder, private service: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private service: AuthService,
+    private authService: SocialAuthService
+  ) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
+    });
+    this.authService.authState.subscribe((user) => {
+      console.log(user);
     });
   }
 
@@ -37,11 +53,12 @@ export class SignupComponent {
         console.log(response);
       },
       (error: any) => {
-        // Handle error if needed
         console.error(error);
       }
     );
   }
 
-  googleSignup() {}
+  signInWithGoogle() {
+    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
 }

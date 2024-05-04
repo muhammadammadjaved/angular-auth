@@ -8,8 +8,6 @@ import { AuthService } from './auth.service';
   imports: [RouterOutlet],
   providers: [AuthService],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
-export class AppComponent {
-  title = 'angular-auth';
-}
+export class AppComponent {}
